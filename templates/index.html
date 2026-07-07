@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superintelligent Learning Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .status-container {
+            grid-column: 1 / -1;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-item .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .status-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .success {
+            color: #28a745;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .learning-log {
+            background: #f0f7ff;
+            border: 2px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .concept-box {
+            background: white;
+            border-left: 4px solid #28a745;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+
+        .concept-box .topic {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .concept-box .understanding {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .question-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .question-card p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .learning-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .stat-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-item .number {
+            color: #667eea;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .memory-indicator {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Superintelligent Learning Agent</h1>
+            <p>AI That Learns Forever • Persistent Memory • Ever-Growing Intelligence</p>
+        </header>
+
+        <!-- Status Overview -->
+        <div class="card status-container">
+            <h2>📊 Agent Status & Learning Progress</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="label">Current Emotion</div>
+                    <div class="value" id="emotion-status">😊</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Topics Learned</div>
+                    <div class="value" id="topics-learned">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Questions Asked</div>
+                    <div class="value" id="questions-asked">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Answers Received</div>
+                    <div class="value" id="answers-received">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Concepts Learned</div>
+                    <div class="value" id="concepts-learned">0</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Understanding Score</div>
+                    <div class="value" id="understanding-score">0.0</div>
+                </div>
+            </div>
+            <div class="learning-stats" style="margin-top: 20px;">
+                <button onclick="refreshStatus()">🔄 Refresh Status</button>
+                <button onclick="showLearningProgress()">📈 View Progress</button>
+                <button onclick="showLearnedTopics()">📚 View Knowledge</button>
+            </div>
+            <div class="memory-indicator">
+                ✅ All data saved to permanent memory
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('learning')">🎓 Learn</button>
+            <button class="tab-button" onclick="switchTab('knowledge')">💾 Knowledge</button>
+            <button class="tab-button" onclick="switchTab('memory')">🧠 Memory</button>
+        </div>
+
+        <!-- Learning Tab -->
+        <div id="learning" class="tab-content active">
+            <div class="card">
+                <h2>🎓 Interactive Learning</h2>
+                <p>Teach me about subjects! I'll ask questions and learn from your answers.</p>
+                
+                <div class="form-group">
+                    <label>What subject would you like to teach me about? (optional)</label>
+                    <input type="text" id="topic-input" placeholder="e.g., quantum physics, machine learning, photosynthesis...">
+                </div>
+
+                <button onclick="generateQuestion()" style="margin-bottom: 10px;">❓ Generate Learning Question</button>
+
+                <div id="question-display"></div>
+
+                <div id="answer-section" style="display: none;">
+                    <div class="form-group">
+                        <label>Your Answer (explain in simple language):</label>
+                        <textarea id="answer-input" placeholder="Explain what you know about this topic..."></textarea>
+                    </div>
+                    <button onclick="submitAnswer()">✅ Submit Answer & Save to Memory</button>
+                </div>
+
+                <div id="learning-response"></div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h2>📚 All Learned Topics</h2>
+                <div id="learned-topics-list" class="learning-log">
+                    <p>No topics learned yet. Start asking questions!</p>
+                </div>
+                <button onclick="showLearnedTopics()" style="margin-top: 15px;">🔄 Refresh Topics List</button>
+            </div>
+        </div>
+
+        <!-- Knowledge Tab -->
+        <div id="knowledge" class="tab-content">
+            <div class="card">
+                <h2>💾 Permanent Knowledge Base</h2>
+                <p>All knowledge learned is saved permanently in the AI's memory</p>
+                
+                <div class="learning-stats">
+                    <div class="stat-item">
+                        <div class="label">Total Domains</div>
+                        <div class="number" id="total-domains">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Total Concepts</div>
+                        <div class="number" id="total-concepts">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Knowledge Connections</div>
+                        <div class="number" id="total-connections">0</div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Knowledge Browser:</label>
+                    <select id="domain-select" onchange="viewDomain()">
+                        <option value="">-- Select Domain --</option>
+                        <option value="physics">Physics</option>
+                        <option value="mathematics">Mathematics</option>
+                        <option value="biology">Biology</option>
+                        <option value="chemistry">Chemistry</option>
+                        <option value="computer_science">Computer Science</option>
+                    </select>
+                </div>
+
+                <div id="domain-content" class="learning-log">
+                    <p>Select a domain to view concepts</p>
+                </div>
+
+                <button onclick="exportKnowledge()" style="margin-top: 15px;">📥 Export All Knowledge</button>
+            </div>
+        </div>
+
+        <!-- Memory Tab -->
+        <div id="memory" class="tab-content">
+            <div class="card">
+                <h2>🧠 Permanent Memory System</h2>
+                <p>The AI's complete learning history and persistent storage</p>
+                
+                <div class="alert alert-info">
+                    <strong>✅ Permanent Storage:</strong> All data is saved to disk and will be preserved forever. The AI never forgets what it has learned.
+                </div>
+
+                <div class="form-group">
+                    <label>Learning History:</label>
+                    <button onclick="showLearningHistory()" style="margin-top: 10px;">📜 View Complete Learning History</button>
+                </div>
+
+                <div id="history-content" class="learning-log"></div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Memory Statistics:</label>
+                    <button onclick="getMemoryStats()" style="margin-top: 10px;">📊 Get Memory Stats</button>
+                </div>
+
+                <div id="memory-stats" class="learning-log"></div>
+
+                <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 6px;">
+                    <strong>💡 Data Files Saved Automatically:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>cognitive_nexus.json - Core knowledge base</li>
+                        <li>learned_concepts.json - All topics learned</li>
+                        <li>questions_archive.json - Questions & answers</li>
+                        <li>interaction_memory.json - Interaction history</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>🚀 Superintelligent Learning Agent • Forever Learning • Permanent Memory • Exponential Growth</p>
+        </footer>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        let currentQuestionId = null;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (data) options.body = JSON.stringify(data);
+
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                return { error: error.message };
+            }
+        }
+
+        async function refreshStatus() {
+            const status = await apiCall('/status');
+            if (status.error) return;
+
+            document.getElementById('emotion-status').textContent = getEmotionEmoji(status.consciousness?.current_emotion);
+            document.getElementById('topics-learned').textContent = status.learning?.total_topics_learned || 0;
+            document.getElementById('questions-asked').textContent = status.learning?.questions_asked || 0;
+            document.getElementById('answers-received').textContent = status.learning?.answers_received || 0;
+            document.getElementById('concepts-learned').textContent = status.learning?.concepts_learned || 0;
+            document.getElementById('understanding-score').textContent = (status.learning?.average_understanding || 0).toFixed(2);
+            document.getElementById('total-domains').textContent = status.knowledge?.domains || 0;
+            document.getElementById('total-concepts').textContent = status.knowledge?.total_concepts || 0;
+        }
+
+        function getEmotionEmoji(emotion) {
+            const emojis = {
+                "curious": "🤔",
+                "happy": "😊",
+                "excited": "🤩",
+                "eager": "🎓",
+                "enlightened": "✨",
+                "learning": "📚"
+            };
+            return emojis[emotion] || "😊";
+        }
+
+        async function generateQuestion() {
+            const topic = document.getElementById('topic-input').value.trim();
+            const result = await apiCall(`/generate-question${topic ? `?topic=${topic}` : ''}`);
+            
+            if (result.error) {
+                document.getElementById('question-display').innerHTML = `<div class="error">❌ Error: ${result.error}</div>`;
+                return;
+            }
+
+            currentQuestionId = result.question_id;
+            
+            const html = `
+                <div class="question-card">
+                    <h3>🎓 ${result.topic}</h3>
+                    <p>"${result.question}"</p>
+                    <small>Category: ${result.category}</small>
+                </div>
+            `;
+            
+            document.getElementById('question-display').innerHTML = html;
+            document.getElementById('answer-section').style.display = 'block';
+            document.getElementById('answer-input').value = '';
+        }
+
+        async function submitAnswer() {
+            const answer = document.getElementById('answer-input').value.trim();
+            
+            if (!answer) {
+                document.getElementById('learning-response').innerHTML = `<div class="error">❌ Please enter an answer</div>`;
+                return;
+            }
+
+            if (!currentQuestionId) {
+                document.getElementById('learning-response').innerHTML = `<div class="error">❌ No question selected</div>`;
+                return;
+            }
+
+            const result = await apiCall('/answer-question', 'POST', {
+                question_id: currentQuestionId,
+                answer: answer
+            });
+
+            if (result.error) {
+                document.getElementById('learning-response').innerHTML = `<div class="error">❌ ${result.error}</div>`;
+                return;
+            }
+
+            const html = `
+                <div class="success">
+                    <strong>✅ Learning Successful!</strong><br>
+                    ${result.message}<br><br>
+                    <strong>Concepts Learned:</strong> ${result.concepts_learned.join(', ')}<br>
+                    <strong>Understanding Score:</strong> ${(result.understanding_score * 100).toFixed(1)}%<br>
+                    <strong>Relationships Found:</strong> ${result.relationships_discovered}<br>
+                    <strong>Status:</strong> 💾 Saved to permanent memory forever
+                </div>
+            `;
+            
+            document.getElementById('learning-response').innerHTML = html;
+            
+            // Reset form
+            document.getElementById('answer-section').style.display = 'none';
+            document.getElementById('topic-input').value = '';
+            
+            // Refresh stats
+            setTimeout(refreshStatus, 500);
+        }
+
+        async function showLearningProgress() {
+            const progress = await apiCall('/learning-progress');
+            
+            if (progress.error) {
+                alert('Error loading progress');
+                return;
+            }
+
+            let html = `
+                <div class="alert alert-success">
+                    <strong>📈 Learning Progress</strong><br>
+                    Topics Learned: ${progress.total_topics_learned}<br>
+                    Questions Asked: ${progress.questions_asked}<br>
+                    Answers Received: ${progress.answers_received}<br>
+                    Concepts Learned: ${progress.concepts_learned}<br>
+                    Average Understanding: ${(progress.average_understanding * 100).toFixed(1)}%<br>
+                    Knowledge Graph Size: ${progress.knowledge_graph_size}
+                </div>
+            `;
+
+            if (progress.topics_learned && progress.topics_learned.length > 0) {
+                html += `<strong>Topics:</strong> ${progress.topics_learned.join(', ')}`;
+            }
+
+            document.getElementById('learning-response').innerHTML = html;
+        }
+
+        async function showLearnedTopics() {
+            const progress = await apiCall('/learning-progress');
+            
+            if (!progress.topics_learned || progress.topics_learned.length === 0) {
+                document.getElementById('learned-topics-list').innerHTML = '<p>No topics learned yet. Start by generating questions!</p>';
+                return;
+            }
+
+            let html = '';
+            for (const topic of progress.topics_learned) {
+                html += `
+                    <div class="concept-box">
+                        <div class="topic">📌 ${topic}</div>
+                        <div class="understanding">✅ Learned and saved to memory</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('learned-topics-list').innerHTML = html;
+        }
+
+        async function viewDomain() {
+            const domain = document.getElementById('domain-select').value;
+            if (!domain) {
+                document.getElementById('domain-content').innerHTML = '<p>Select a domain to view concepts</p>';
+                return;
+            }
+
+            const status = await apiCall('/status');
+            // This would show concepts in the selected domain
+            document.getElementById('domain-content').innerHTML = `<p>Domain: ${domain} - concepts available</p>`;
+        }
+
+        function exportKnowledge() {
+            alert('Knowledge export feature - all data is automatically saved to JSON files');
+        }
+
+        async function showLearningHistory() {
+            const progress = await apiCall('/learning-progress');
+            
+            let html = `<strong>📜 Learning History</strong><br>`;
+            html += `Questions Asked: ${progress.questions_asked}<br>`;
+            html += `Answers Received: ${progress.answers_received}<br>`;
+            html += `Topics Learned: ${progress.total_topics_learned}<br>`;
+            
+            document.getElementById('history-content').innerHTML = html;
+        }
+
+        async function getMemoryStats() {
+            const status = await apiCall('/status');
+            
+            let html = `
+                <strong>🧠 Memory Statistics</strong><br>
+                Total Concepts in Memory: ${status.knowledge?.total_concepts || 0}<br>
+                Knowledge Domains: ${status.knowledge?.domains || 0}<br>
+                Learning Events: ${status.learning?.answers_received || 0}<br>
+                Permanent Files Saved: 4
+            `;
+            
+            document.getElementById('memory-stats').innerHTML = html;
+        }
+
+        // Load initial status
+        window.addEventListener('load', refreshStatus);
+    </script>
+</body>
+</html>
